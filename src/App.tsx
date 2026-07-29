@@ -44,12 +44,12 @@ export default function App() {
     }
   }, [theme]);
 
-  // Crisp & Responsive Lenis Smooth Scroll Engine (0.8s Duration + 2.2x Mobile Touch Responsiveness)
+  // Fast Crisp Lenis Smooth Scroll Engine (0.6s Snappy Duration for 100% Instant Responsive Scroll)
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.8,
+      duration: 0.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2.2,
+      touchMultiplier: 2.5,
       infinite: false,
     });
 
@@ -228,7 +228,7 @@ export default function App() {
       const offsetY = (canvasHeight - drawHeight) / 2;
 
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
+      ctx.imageSmoothingQuality = 'medium'; // Fast 60fps rendering on mobile GPUs
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 
       // RADIAL CORNER MASKS FOR CLEAN EDGE FADING
@@ -279,11 +279,11 @@ export default function App() {
       targetFrameRef.current = scrollProgress * (TOTAL_FRAMES - 1);
     };
 
-    // Crisp Smooth Physics Loop (Lerp factor 0.18 for instant responsive glide)
+    // Crisp Fast Physics Loop (Lerp factor 0.22 for instant 60fps responsive glide)
     const animLoop = () => {
       const diff = targetFrameRef.current - currentFrameRef.current;
       if (Math.abs(diff) > 0.001) {
-        currentFrameRef.current += diff * 0.18;
+        currentFrameRef.current += diff * 0.22;
         renderFrame(currentFrameRef.current);
       } else if (currentFrameRef.current !== targetFrameRef.current) {
         currentFrameRef.current = targetFrameRef.current;
