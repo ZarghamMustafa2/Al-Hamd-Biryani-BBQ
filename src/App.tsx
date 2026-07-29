@@ -51,20 +51,34 @@ export default function App() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  // Preload all 240 frames silently in background
+  // Preload frames & force render on mobile load
   useEffect(() => {
     const images: HTMLImageElement[] = [];
 
     for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image();
       img.src = getFramePath(i);
+
+      // Re-trigger canvas draw on mobile when first frame finishes loading
+      img.onload = () => {
+        if (i === 0 && canvasRef.current) {
+          const ctx = canvasRef.current.getContext('2d');
+          if (ctx) {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvasRef.current.width = window.innerWidth * dpr;
+            canvasRef.current.height = window.innerHeight * dpr;
+            ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
+          }
+        }
+      };
+
       images.push(img);
     }
 
     imagesRef.current = images;
   }, []);
 
-  // Canvas drawing & animation loop for 60fps frame scrubbing
+  // Canvas drawing & animation loop for mobile touch + desktop 60fps frame scrubbing
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -73,7 +87,7 @@ export default function App() {
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       renderFrame(currentFrameRef.current);
@@ -97,7 +111,7 @@ export default function App() {
       ctx.fillStyle = bgThemeColor;
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-      // Fit image aspect ratio (COVER + 8% EXTRA CROP TO PUSH OUT ALL WATERMARKS & CORNER LOGOS)
+      // Fit image aspect ratio
       const imgWidth = img.naturalWidth;
       const imgHeight = img.naturalHeight;
       const imgAspect = imgWidth / imgHeight;
@@ -114,7 +128,7 @@ export default function App() {
         drawWidth = drawHeight * imgAspect;
       }
 
-      // 1.08x Scale factor crops off the outer 4% edges of all 4 corners where watermarks hide
+      // 1.08x Scale factor crops off outer edges
       const scaleFactor = 1.08;
       drawWidth = drawWidth * scaleFactor;
       drawHeight = drawHeight * scaleFactor;
@@ -126,14 +140,14 @@ export default function App() {
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 
-      // HEAVY RADIAL CORNER MASKS ON ALL 4 CORNERS FOR 100% CLEAN WATERMARK REMOVAL
+      // RADIAL CORNER MASKS FOR CLEAN EDGE FADING
       const maskRadius = Math.max(canvasWidth, canvasHeight) * 0.25;
 
       const corners = [
-        { x: canvasWidth, y: canvasHeight }, // Bottom-Right
-        { x: 0, y: canvasHeight },          // Bottom-Left
-        { x: canvasWidth, y: 0 },           // Top-Right
-        { x: 0, y: 0 },                      // Top-Left
+        { x: canvasWidth, y: canvasHeight },
+        { x: 0, y: canvasHeight },
+        { x: canvasWidth, y: 0 },
+        { x: 0, y: 0 },
       ];
 
       corners.forEach((corner) => {
@@ -158,9 +172,9 @@ export default function App() {
     };
 
     const updateScrollTarget = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || window.pageYOffset || 0;
       const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
+        (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
       if (maxScroll <= 0) return;
 
       const scrollProgress = Math.min(1, Math.max(0, scrollTop / maxScroll));
@@ -182,6 +196,7 @@ export default function App() {
 
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('scroll', updateScrollTarget, { passive: true });
+    window.addEventListener('touchmove', updateScrollTarget, { passive: true });
 
     resizeCanvas();
     updateScrollTarget();
@@ -190,6 +205,7 @@ export default function App() {
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('scroll', updateScrollTarget);
+      window.removeEventListener('touchmove', updateScrollTarget);
       if (animFrameIdRef.current) {
         cancelAnimationFrame(animFrameIdRef.current);
       }
@@ -200,21 +216,21 @@ export default function App() {
     <div className={`${theme} relative min-h-screen font-sans overflow-x-hidden transition-colors duration-500 ${
       theme === 'dark' ? 'bg-[#050508] text-slate-100' : 'bg-[#fffcf7] text-slate-900'
     }`}>
-      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame Canvas Scrub */}
-      <div className={`fixed inset-0 w-screen h-screen overflow-hidden z-0 pointer-events-none ${
+      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame Canvas Scrub (Mobile + Desktop Optimized) */}
+      <div className={`fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none ${
         theme === 'dark' ? 'bg-[#050508]' : 'bg-[#fffcf7]'
       }`}>
-        <canvas ref={canvasRef} className="w-full h-full block" />
+        <canvas ref={canvasRef} className="w-full h-full block object-cover" />
       </div>
 
-      {/* 2. MIDDLE LAYER: Light Translucent Overlays for High Background Visibility */}
-      <div className={`fixed inset-0 w-screen h-screen pointer-events-none z-10 transition-colors duration-500 ${
+      {/* 2. MIDDLE LAYER: Translucent Overlays */}
+      <div className={`fixed inset-0 w-full h-full pointer-events-none z-10 transition-colors duration-500 ${
         theme === 'dark'
-          ? 'bg-gradient-to-b from-[#050508]/50 via-transparent to-[#050508]/65'
-          : 'bg-gradient-to-b from-[#fffcf7]/60 via-transparent to-[#fffcf7]/70'
+          ? 'bg-gradient-to-b from-[#050508]/40 via-transparent to-[#050508]/60'
+          : 'bg-gradient-to-b from-[#fffcf7]/50 via-transparent to-[#fffcf7]/65'
       }`} />
 
-      {/* 3. TOP LAYER: Website Sections & Dedicated Menu Page */}
+      {/* 3. TOP LAYER: Website Content */}
       <div className="relative z-20 flex flex-col min-h-screen">
         <Navbar
           onOpenOrderModal={() => setIsOrderModalOpen(true)}
