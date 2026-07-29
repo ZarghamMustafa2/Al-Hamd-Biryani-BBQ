@@ -4,7 +4,7 @@ import { AlHamdLogo } from './AlHamdLogo';
 
 export const FooterSection: React.FC = () => {
   return (
-    <footer className="relative z-10 bg-slate-950/95 dark:bg-slate-950/95 light:bg-slate-900 border-t-2 border-amber-500/80 text-white py-14 px-4 sm:px-6 lg:px-8 shadow-2xl backdrop-blur-md">
+    <footer className="relative z-10 bg-[#070a12] border-t-4 border-amber-500 text-white py-14 px-4 sm:px-6 lg:px-8 shadow-[0_-15px_30px_rgba(245,158,11,0.15)]">
       <div className="max-w-7xl mx-auto space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
           
@@ -26,7 +26,7 @@ export const FooterSection: React.FC = () => {
               Serving Multan's most authentic Nizami Dum Biryani, hand-crafted in sealed copper pots, along with smoky charcoal-grilled BBQ delicacies and royal desserts.
             </p>
 
-            <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-amber-500/40 space-y-2">
+            <div className="p-3.5 rounded-2xl bg-slate-900 border border-amber-500/50 space-y-2">
               <p className="text-xs text-amber-400 font-black flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>Nagana Chowk, Near Total Petrol Pump, M.A. Jinnah Road, Multan, Pakistan</span>
@@ -50,7 +50,7 @@ export const FooterSection: React.FC = () => {
                 href="https://instagram.com/alhamdbiryanii"
                 target="_blank"
                 rel="noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-pink-500/20 border border-pink-500/40 text-pink-400 hover:bg-pink-500 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-xl bg-pink-500/20 border border-pink-500/50 text-pink-400 hover:bg-pink-500 hover:text-white transition-all text-xs font-black flex items-center gap-1.5"
                 title="Instagram: @alhamdbiryanii"
               >
                 <Instagram className="w-4 h-4" />
@@ -60,7 +60,7 @@ export const FooterSection: React.FC = () => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-blue-500/20 border border-blue-500/40 text-blue-400 hover:bg-blue-500 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-xl bg-blue-500/20 border border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white transition-all text-xs font-black flex items-center gap-1.5"
                 title="Facebook: Al hamd biryani"
               >
                 <Facebook className="w-4 h-4" />
@@ -110,7 +110,7 @@ export const FooterSection: React.FC = () => {
             </h4>
 
             {/* Direct Phone */}
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <div className="p-3 rounded-xl bg-slate-900 border border-amber-500/30 space-y-1">
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Phone Order Hotline</span>
               <a href="tel:+923126382499" className="text-sm font-black text-amber-400 hover:underline flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 fill-amber-400/20 animate-pulse" />
@@ -119,13 +119,13 @@ export const FooterSection: React.FC = () => {
             </div>
 
             {/* WhatsApp Direct Button */}
-            <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/50 space-y-1.5">
+            <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/60 space-y-1.5">
               <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">WhatsApp Direct Order</span>
               <a
                 href="https://wa.me/923126382499?text=Assalam-o-Alaikum%20Al%20Hamd%20Biryani%20%26%20BBQ!"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-2 px-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-md transition-all"
+                className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-md transition-all"
               >
                 <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
                 <span>CHAT ON WHATSAPP (0312 6382499)</span>
