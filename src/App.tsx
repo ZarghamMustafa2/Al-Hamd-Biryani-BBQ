@@ -150,7 +150,7 @@ export default function App() {
     };
   }, []);
 
-  // Canvas drawing & 60fps Liquid Inertia animation scrubbing loop with Mobile Responsive Fit
+  // Canvas drawing & 60fps Liquid Inertia animation scrubbing loop with 100% Full Screen Viewport Cover
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -203,7 +203,7 @@ export default function App() {
 
       if (!img || !img.complete || img.naturalWidth === 0) return;
 
-      // PERFECT RESPONSIVE ASPECT RATIO FIT & MOBILE VERTICAL ALIGNMENT
+      // 100% FULL SCREEN COVER FIT (Fills 100% of height and 100% of width on Mobile & Desktop)
       const imgWidth = img.naturalWidth;
       const imgHeight = img.naturalHeight;
       const imgAspect = imgWidth / imgHeight;
@@ -212,29 +212,16 @@ export default function App() {
       let drawWidth = canvasWidth;
       let drawHeight = canvasHeight;
 
-      const isMobilePortrait = canvasAspect < 1.0;
-
-      let offsetX = 0;
-      let offsetY = 0;
-
-      if (isMobilePortrait) {
-        // Fit by width on Mobile Portrait so 100% of the 3D Biryani background is fully visible without heavy zoom!
-        drawWidth = canvasWidth * 1.05;
-        drawHeight = drawWidth / imgAspect;
-        offsetX = (canvasWidth - drawWidth) / 2;
-        // Position vertically 38% down for optimal mobile hero content framing
-        offsetY = (canvasHeight - drawHeight) * 0.38;
-      } else if (canvasAspect > imgAspect) {
-        drawWidth = canvasWidth * 1.08;
-        drawHeight = drawWidth / imgAspect;
-        offsetX = (canvasWidth - drawWidth) / 2;
-        offsetY = (canvasHeight - drawHeight) / 2;
+      if (canvasAspect > imgAspect) {
+        drawWidth = canvasWidth;
+        drawHeight = canvasWidth / imgAspect;
       } else {
-        drawHeight = canvasHeight * 1.08;
+        drawHeight = canvasHeight;
         drawWidth = drawHeight * imgAspect;
-        offsetX = (canvasWidth - drawWidth) / 2;
-        offsetY = (canvasHeight - drawHeight) / 2;
       }
+
+      const offsetX = (canvasWidth - drawWidth) / 2;
+      const offsetY = (canvasHeight - drawHeight) / 2;
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'medium'; // Fast 60fps rendering on mobile GPUs
@@ -326,7 +313,7 @@ export default function App() {
     <div className={`${theme} relative min-h-screen font-sans overflow-x-hidden transition-colors duration-500 ${
       theme === 'dark' ? 'bg-[#050508] text-slate-100' : 'bg-[#fffcf7] text-slate-900'
     }`}>
-      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame 3D Canvas Scrub Animation with Mobile Responsive Fit */}
+      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame 3D Canvas Scrub Animation with 100% Full Screen Viewport Cover */}
       <div
         className={`fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none ${
           theme === 'dark' ? 'bg-[#050508]' : 'bg-[#fffcf7]'
