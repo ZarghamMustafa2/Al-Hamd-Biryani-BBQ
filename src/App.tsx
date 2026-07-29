@@ -44,12 +44,12 @@ export default function App() {
     }
   }, [theme]);
 
-  // Award-Winning Lenis Smooth Scroll Engine (Apple & Nike 120Hz/60fps Liquid Smooth Touch & Wheel Physics)
+  // Crisp & Responsive Lenis Smooth Scroll Engine (0.8s Duration + 2.2x Mobile Touch Responsiveness)
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 1.8,
+      touchMultiplier: 2.2,
       infinite: false,
     });
 
@@ -279,11 +279,11 @@ export default function App() {
       targetFrameRef.current = scrollProgress * (TOTAL_FRAMES - 1);
     };
 
-    // Liquid Smooth Inertia Physics Loop (Lerp factor 0.12 for buttery smooth Apple-style glide on mobile)
+    // Crisp Smooth Physics Loop (Lerp factor 0.18 for instant responsive glide)
     const animLoop = () => {
       const diff = targetFrameRef.current - currentFrameRef.current;
       if (Math.abs(diff) > 0.001) {
-        currentFrameRef.current += diff * 0.12;
+        currentFrameRef.current += diff * 0.18;
         renderFrame(currentFrameRef.current);
       } else if (currentFrameRef.current !== targetFrameRef.current) {
         currentFrameRef.current = targetFrameRef.current;
@@ -317,7 +317,7 @@ export default function App() {
     <div className={`${theme} relative min-h-screen font-sans overflow-x-hidden transition-colors duration-500 ${
       theme === 'dark' ? 'bg-[#050508] text-slate-100' : 'bg-[#fffcf7] text-slate-900'
     }`}>
-      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame 3D Canvas Scrub Animation with Liquid Inertia Physics */}
+      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame 3D Canvas Scrub Animation with Lenis Crisp Physics */}
       <div
         className={`fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none ${
           theme === 'dark' ? 'bg-[#050508]' : 'bg-[#fffcf7]'
