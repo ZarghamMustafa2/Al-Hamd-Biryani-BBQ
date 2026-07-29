@@ -13,7 +13,14 @@ import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { OrderModal } from './components/OrderModal';
 
 const TOTAL_FRAMES = 240;
+
+// Dual path resolution for both Vercel Web Server (/frames/) and Local Standalone (./frames/)
 const getFramePath = (index: number) => {
+  const paddedIndex = index.toString().padStart(6, '0');
+  return `/frames/frame_${paddedIndex}.png`;
+};
+
+const getFallbackFramePath = (index: number) => {
   const paddedIndex = index.toString().padStart(6, '0');
   return `./frames/frame_${paddedIndex}.png`;
 };
@@ -43,6 +50,7 @@ export default function App() {
   // Frame Scroll Animation State & Refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const fallbackPosterRef = useRef<HTMLImageElement | null>(null);
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
   const animFrameIdRef = useRef<number | null>(null);
@@ -51,7 +59,22 @@ export default function App() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  // Preload frames & force render on mobile load
+  // Preload poster image for instant 0.01s mobile background display
+  useEffect(() => {
+    const poster = new Image();
+    poster.src = './chicken_tikka_biryani.jpg';
+    poster.onload = () => {
+      fallbackPosterRef.current = poster;
+      if (canvasRef.current) {
+        const ctx = canvasRef.current.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(poster, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        }
+      }
+    };
+  }, []);
+
+  // Preload frames with error fallback
   useEffect(() => {
     const images: HTMLImageElement[] = [];
 
@@ -59,7 +82,11 @@ export default function App() {
       const img = new Image();
       img.src = getFramePath(i);
 
-      // Re-trigger canvas draw on mobile when first frame finishes loading
+      // On mobile / server error, try fallback path
+      img.onerror = () => {
+        img.src = getFallbackFramePath(i);
+      };
+
       img.onload = () => {
         if (i === 0 && canvasRef.current) {
           const ctx = canvasRef.current.getContext('2d');
@@ -94,24 +121,28 @@ export default function App() {
     };
 
     const renderFrame = (frameIndex: number) => {
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const bgThemeColor = theme === 'dark' ? '#050508' : '#fffcf7';
+
+      // 1. ALWAYS CLEAR & FILL CANVAS FIRST (Prevents blank background on mobile)
+      ctx.fillStyle = bgThemeColor;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
       const idx = Math.min(
         TOTAL_FRAMES - 1,
         Math.max(0, Math.round(frameIndex))
       );
-      const img = imagesRef.current[idx];
+      let img = imagesRef.current[idx];
+
+      // 2. FALLBACK TO POSTER IMAGE IF FRAME IS NOT LOADED YET ON MOBILE
+      if ((!img || !img.complete || img.naturalWidth === 0) && fallbackPosterRef.current) {
+        img = fallbackPosterRef.current;
+      }
 
       if (!img || !img.complete || img.naturalWidth === 0) return;
 
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-
-      const bgThemeColor = theme === 'dark' ? '#050508' : '#fffcf7';
-
-      // Clear canvas with theme background
-      ctx.fillStyle = bgThemeColor;
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-      // Fit image aspect ratio
+      // Fit image aspect ratio (COVER + 8% EXTRA CROP TO REMOVE WATERMARKS)
       const imgWidth = img.naturalWidth;
       const imgHeight = img.naturalHeight;
       const imgAspect = imgWidth / imgHeight;
@@ -128,7 +159,6 @@ export default function App() {
         drawWidth = drawHeight * imgAspect;
       }
 
-      // 1.08x Scale factor crops off outer edges
       const scaleFactor = 1.08;
       drawWidth = drawWidth * scaleFactor;
       drawHeight = drawHeight * scaleFactor;
@@ -216,7 +246,7 @@ export default function App() {
     <div className={`${theme} relative min-h-screen font-sans overflow-x-hidden transition-colors duration-500 ${
       theme === 'dark' ? 'bg-[#050508] text-slate-100' : 'bg-[#fffcf7] text-slate-900'
     }`}>
-      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame Canvas Scrub (Mobile + Desktop Optimized) */}
+      {/* 1. BACKGROUND LAYER: Fixed Sticky 240-Frame Canvas Scrub + Mobile Poster Fallback */}
       <div className={`fixed inset-0 w-full h-full overflow-hidden z-0 pointer-events-none ${
         theme === 'dark' ? 'bg-[#050508]' : 'bg-[#fffcf7]'
       }`}>
@@ -226,8 +256,8 @@ export default function App() {
       {/* 2. MIDDLE LAYER: Translucent Overlays */}
       <div className={`fixed inset-0 w-full h-full pointer-events-none z-10 transition-colors duration-500 ${
         theme === 'dark'
-          ? 'bg-gradient-to-b from-[#050508]/40 via-transparent to-[#050508]/60'
-          : 'bg-gradient-to-b from-[#fffcf7]/50 via-transparent to-[#fffcf7]/65'
+          ? 'bg-gradient-to-b from-[#050508]/35 via-transparent to-[#050508]/55'
+          : 'bg-gradient-to-b from-[#fffcf7]/45 via-transparent to-[#fffcf7]/60'
       }`} />
 
       {/* 3. TOP LAYER: Website Content */}
