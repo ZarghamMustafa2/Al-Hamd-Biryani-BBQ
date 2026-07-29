@@ -203,7 +203,7 @@ export default function App() {
 
       if (!img || !img.complete || img.naturalWidth === 0) return;
 
-      // PERFECT RESPONSIVE ASPECT RATIO FIT (Prevents Zoomed-in/Cropped background on Mobile)
+      // PERFECT RESPONSIVE ASPECT RATIO FIT & MOBILE VERTICAL ALIGNMENT
       const imgWidth = img.naturalWidth;
       const imgHeight = img.naturalHeight;
       const imgAspect = imgWidth / imgHeight;
@@ -214,20 +214,27 @@ export default function App() {
 
       const isMobilePortrait = canvasAspect < 1.0;
 
+      let offsetX = 0;
+      let offsetY = 0;
+
       if (isMobilePortrait) {
         // Fit by width on Mobile Portrait so 100% of the 3D Biryani background is fully visible without heavy zoom!
         drawWidth = canvasWidth * 1.05;
         drawHeight = drawWidth / imgAspect;
+        offsetX = (canvasWidth - drawWidth) / 2;
+        // Position vertically 38% down for optimal mobile hero content framing
+        offsetY = (canvasHeight - drawHeight) * 0.38;
       } else if (canvasAspect > imgAspect) {
         drawWidth = canvasWidth * 1.08;
         drawHeight = drawWidth / imgAspect;
+        offsetX = (canvasWidth - drawWidth) / 2;
+        offsetY = (canvasHeight - drawHeight) / 2;
       } else {
         drawHeight = canvasHeight * 1.08;
         drawWidth = drawHeight * imgAspect;
+        offsetX = (canvasWidth - drawWidth) / 2;
+        offsetY = (canvasHeight - drawHeight) / 2;
       }
-
-      const offsetX = (canvasWidth - drawWidth) / 2;
-      const offsetY = (canvasHeight - drawHeight) / 2;
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'medium'; // Fast 60fps rendering on mobile GPUs
