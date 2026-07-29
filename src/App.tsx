@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Lenis from 'lenis';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { MenuSection } from './components/MenuSection';
@@ -42,6 +43,29 @@ export default function App() {
       root.classList.remove('dark');
     }
   }, [theme]);
+
+  // Award-Winning Lenis Smooth Scroll Engine (Apple & Nike 120Hz/60fps Liquid Smooth Touch & Wheel Physics)
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 1.8,
+      infinite: false,
+    });
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
+  }, []);
 
   // Order Modal State
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
