@@ -1,0 +1,6 @@
+{
+  "name": "Biryani Food Banner",
+  "description": "Interactive web application matching the Biryani banner artwork with extracted components, customization controls, and order flow.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

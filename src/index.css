@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-script {
+    font-family: 'Satisfy', 'Caveat', cursive;
+  }
+  .font-caveat {
+    font-family: 'Caveat', cursive;
+  }
+  .font-display {
+    font-family: 'Montserrat', 'Poppins', sans-serif;
+  }
+}
+
+html, body {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d97706;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* ----------------------------------------------------------------- */
+/* DARK THEME SPECIFIC STYLES                                        */
+/* ----------------------------------------------------------------- */
+.dark-theme {
+  background-color: #050508;
+  color: #f8fafc;
+}
+
+.dark-theme .glass-panel {
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .glass-card {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme .glass-card-hover:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(245, 158, 11, 0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.15);
+}
+
+.dark-theme .text-heading {
+  color: #ffffff !important;
+}
+
+.dark-theme .text-body {
+  color: #cbd5e1 !important;
+}
+
+.dark-theme .text-muted {
+  color: #94a3b8 !important;
+}
+
+.dark-theme .badge-accent {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fde047;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.dark-theme .input-field {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-color: #334155;
+}
+
+/* ----------------------------------------------------------------- */
+/* LIGHT THEME SPECIFIC STYLES                                       */
+/* ----------------------------------------------------------------- */
+.light-theme {
+  background-color: #faf8f5;
+  color: #0f172a;
+}
+
+.light-theme .glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(217, 119, 6, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.light-theme .glass-card {
+  background: #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.1);
+}
+
+.light-theme .glass-card-hover:hover {
+  background: #ffffff;
+  border-color: rgba(217, 119, 6, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -5px rgba(217, 119, 6, 0.2);
+}
+
+.light-theme .text-heading {
+  color: #0f172a !important;
+}
+
+.light-theme .text-body {
+  color: #334155 !important;
+  font-weight: 500;
+}
+
+.light-theme .text-muted {
+  color: #475569 !important;
+  font-weight: 500;
+}
+
+.light-theme .badge-accent {
+  background: rgba(245, 158, 11, 0.2);
+  color: #854d0e;
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  font-weight: 800;
+}
+
+.light-theme .input-field {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  font-weight: 500;
+}
