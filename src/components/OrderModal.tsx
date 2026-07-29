@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Flame, Check, ShoppingBag, Clock, PhoneCall, Plus, Minus, Bike, MapPin } from 'lucide-react';
+import { X, Flame, Check, ShoppingBag, Clock, PhoneCall, Plus, Minus, Bike, MapPin, MessageCircle } from 'lucide-react';
 import { NEW_OFFICIAL_MENU } from './MenuSection';
 import { AlHamdLogo } from './AlHamdLogo';
 
@@ -49,12 +49,33 @@ export const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose }) => {
     return total;
   };
 
+  const totalPrice = calculateTotal();
+
+  // Create WhatsApp message string
+  const getWhatsAppMessage = () => {
+    let text = `*New Order - Al Hamd Biryani %26 BBQ Multan*\n\n`;
+    text += `*Customer:* ${deliveryDetails.name || 'Guest'}\n`;
+    text += `*Phone:* ${deliveryDetails.phone || '03126382499'}\n`;
+    text += `*Delivery Address:* ${deliveryDetails.address}\n\n`;
+    text += `*Items Ordered:*\n`;
+
+    Object.entries(selectedItems).forEach(([id, qty]) => {
+      const item = NEW_OFFICIAL_MENU.find((m) => m.id === id);
+      if (item && qty > 0) {
+        text += `- ${item.name} x ${qty} = ${item.price}\n`;
+      }
+    });
+
+    text += `\n*Total Amount:* Rs ${totalPrice}\n`;
+    text += `*Location:* Nagana Chowk, M.A. Jinnah Road, Multan`;
+
+    return encodeURIComponent(text);
+  };
+
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
     setOrderPlaced(true);
   };
-
-  const totalPrice = calculateTotal();
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
@@ -67,7 +88,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose }) => {
               <h3 className="font-bold text-white text-lg flex items-center gap-1.5 uppercase">
                 Online Order - Al Hamd Multan <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
               </h3>
-              <p className="text-xs text-amber-400 font-semibold">Hot &amp; Fresh Home Delivery Hotline: +92 312 6382499</p>
+              <p className="text-xs text-emerald-400 font-bold flex items-center gap-1">
+                <MessageCircle className="w-3.5 h-3.5 fill-emerald-400 text-slate-900 inline" />
+                <span>WhatsApp Order Hotline: 0312 6382499</span>
+              </p>
             </div>
           </div>
 
@@ -88,9 +112,22 @@ export const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose }) => {
             <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
               Thank you, <strong className="text-amber-400">{deliveryDetails.name || 'Valued Guest'}</strong>! Your order for <strong className="text-amber-400">Rs {totalPrice}</strong> has been received by Al Hamd Biryani &amp; BBQ Multan kitchen.
             </p>
+
+            <div className="pt-2">
+              <a
+                href={`https://wa.me/923126382499?text=${getWhatsAppMessage()}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl shadow-xl transition-all"
+              >
+                <MessageCircle className="w-5 h-5 fill-white text-emerald-600" />
+                <span>SEND ORDER TO WHATSAPP (0312 6382499)</span>
+              </a>
+            </div>
+
             <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 text-xs text-slate-400 space-y-1 max-w-md mx-auto text-left">
               <p><strong className="text-slate-200">Delivery Address:</strong> {deliveryDetails.address}</p>
-              <p><strong className="text-slate-200">Delivery Hotline:</strong> +92 312 6382499</p>
+              <p><strong className="text-slate-200">WhatsApp Hotline:</strong> 0312 6382499</p>
               <p><strong className="text-slate-200">Estimated Delivery:</strong> 25-35 Minutes</p>
             </div>
 
@@ -175,7 +212,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose }) => {
                 <input
                   type="tel"
                   required
-                  placeholder="Phone Number (+92 312 6382499)"
+                  placeholder="Phone / WhatsApp Number (0312 6382499)"
                   value={deliveryDetails.phone}
                   onChange={(e) => setDeliveryDetails({ ...deliveryDetails, phone: e.target.value })}
                   className="bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none"
@@ -193,20 +230,32 @@ export const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose }) => {
             </div>
 
             {/* Total Price & Submit */}
-            <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+            <div className="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <span className="text-xs text-slate-400 block">Total Order Amount:</span>
                 <span className="text-2xl font-black text-amber-400">Rs {totalPrice}</span>
               </div>
 
-              <button
-                type="submit"
-                disabled={totalPrice === 0}
-                className="px-8 py-3.5 bg-gradient-to-r from-red-600 via-amber-600 to-orange-500 hover:from-red-700 hover:to-orange-600 disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl shadow-xl shadow-red-600/30 transition-all flex items-center gap-2 cursor-pointer"
-              >
-                <Bike className="w-4 h-4" />
-                <span>CONFIRM ORDER (Rs {totalPrice})</span>
-              </button>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <a
+                  href={`https://wa.me/923126382499?text=${getWhatsAppMessage()}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 sm:flex-initial px-5 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                  <span>WhatsApp Order</span>
+                </a>
+
+                <button
+                  type="submit"
+                  disabled={totalPrice === 0}
+                  className="flex-1 sm:flex-initial px-6 py-3.5 bg-gradient-to-r from-red-600 via-amber-600 to-orange-500 hover:from-red-700 hover:to-orange-600 disabled:opacity-50 text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl shadow-xl shadow-red-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Bike className="w-4 h-4" />
+                  <span>CONFIRM ORDER</span>
+                </button>
+              </div>
             </div>
           </form>
         )}

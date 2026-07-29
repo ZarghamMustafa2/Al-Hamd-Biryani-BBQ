@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Instagram, Facebook } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, Instagram, Facebook, MessageCircle } from 'lucide-react';
 
 export const ContactSection: React.FC = () => {
   const [sent, setSent] = useState(false);
@@ -18,6 +18,28 @@ export const ContactSection: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-5 space-y-4">
+            {/* WhatsApp Order Card */}
+            <div className="glass-card p-6 rounded-3xl space-y-3 border border-emerald-500/50 shadow-xl bg-emerald-950/20">
+              <div className="flex items-center gap-3 text-emerald-400">
+                <MessageCircle className="w-6 h-6 fill-emerald-400 text-slate-950" />
+                <h4 className="font-black text-white text-base">WhatsApp Order &amp; Delivery</h4>
+              </div>
+              <p className="text-sm font-extrabold text-emerald-400 pl-9">
+                0312 6382499 / +92 312 6382499
+              </p>
+              <div className="pl-9 pt-1">
+                <a
+                  href="https://wa.me/923126382499?text=Assalam-o-Alaikum%20Al%20Hamd%20Biryani%20%26%20BBQ%2C%20I%20want%20to%20place%20an%20order!"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow-md transition-transform hover:scale-105"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                  <span>Chat &amp; Order on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
             {/* Location Card */}
             <div className="glass-card p-6 rounded-3xl space-y-3 border border-amber-500/40 shadow-xl">
               <div className="flex items-center gap-3 text-amber-500">
@@ -33,7 +55,7 @@ export const ContactSection: React.FC = () => {
             <div className="glass-card p-6 rounded-3xl space-y-3 border border-slate-200 dark:border-slate-800 shadow-md">
               <div className="flex items-center gap-3 text-amber-500">
                 <Phone className="w-5 h-5" />
-                <h4 className="font-bold text-heading text-sm">Direct Phone &amp; Order Hotline</h4>
+                <h4 className="font-bold text-heading text-sm">Direct Phone Hotline</h4>
               </div>
               <a href="tel:+923126382499" className="text-sm font-extrabold text-amber-500 pl-8 block hover:underline">
                 +92 312 6382499

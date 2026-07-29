@@ -7,6 +7,7 @@ import { TestimonialsSection } from './components/TestimonialsSection';
 import { ReservationSection } from './components/ReservationSection';
 import { ContactSection } from './components/ContactSection';
 import { FooterSection } from './components/FooterSection';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 
 // Order Modal
 import { OrderModal } from './components/OrderModal';
@@ -256,6 +257,9 @@ export default function App() {
 
         <FooterSection />
       </div>
+
+      {/* Floating WhatsApp Widget */}
+      <FloatingWhatsApp />
 
       {/* Interactive Order Modal */}
       <OrderModal
